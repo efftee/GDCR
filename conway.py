@@ -38,7 +38,7 @@ class ConwayGOL(TestCase):
         output = convolve(matrix, kernel)
         self.assertTrue(np.array_equal(output, result))
 
-    def test_alive_neighbors(self):
+    def test_next_state_if_alive(self):
         cases = range(9)
         for case in cases:
             next_state = get_next_state(1, case)
@@ -46,7 +46,15 @@ class ConwayGOL(TestCase):
                 self.assertEqual(0, next_state)
             else:
                 self.assertEqual(1, next_state)
-        
+
+    def test_next_state_if_dead(self):
+        cases = range(9)
+        for case in cases:
+            next_state = get_next_state(0, case)
+            if case != 3:
+                self.assertEqual(0, next_state)
+            else:
+                self.assertEqual(1, next_state)
 
 
 
@@ -64,6 +72,13 @@ def get_next_state(current_state, alive_neighbors):
             return 0
         else:
             return 1
+    elif current_state==0:
+        if alive_neighbors==3:
+            return 1
+        else:
+            return 0
+    else:
+        raise Exception("HALP")
 
 
 def convolve(mat, kernel=GOL_KERNEL):
